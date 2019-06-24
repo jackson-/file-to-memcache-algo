@@ -1,21 +1,19 @@
 import argparse
 from os.path import getsize
 import math
-from cache_master_flex import store as memstore
+from cache_master_flex import store as memstore, retrieve as memretrieve
 
 def store(name, infile):
-    # call your library here
-    size = getsize(infile)
-    if size > 50000000:
-      raise ValueError("That file is too large! Please try again with something that is less than 50 megabytes.")
-    f = open(infile, "r")
-    memstore(name, f, size)
+  size = getsize(infile)
+  if size > 50000000:
+    raise ValueError("That file is too large! Please try again with something that is less than 50 megabytes.")
+  f = open(infile, "r")
+  memstore(name, f, size)
 
 
 def retrieve(name, outfile):
-    # call your library here
-    print("RETRIEVE", name, outfile)
-    pass
+  data = memretrieve(name)
+  return data
 
 
 def main():

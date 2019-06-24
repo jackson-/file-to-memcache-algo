@@ -15,3 +15,11 @@ def store(name, data_file, size=None, chunk_size=1000000):
     step += 1  
   
   
+def retrieve(name, chunk_size=1000000):
+  steps = int(client.get('{}_0'.format(name)))
+  current_step = 1
+  data = client.get('{}_{}'.format(name, current_step))
+  while(steps > current_step):
+    current_step += 1
+    data += client.get('{}_{}'.format(name, current_step))
+  return data
