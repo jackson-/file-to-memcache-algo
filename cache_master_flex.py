@@ -5,6 +5,8 @@ client = Client(('localhost', 11211))
 result = client.get('some_key')
 
 def store(name, data_file, size=None, chunk_size=1000000):
+  if(client.get('{}_0'.format(name, current_step))):
+    raise ValueError("Sorry this file has already been entered. Please enter a different file")
   data = data_file.read(chunk_size)
   step = 1
   while data:
