@@ -24,8 +24,7 @@ def retrieve(name, chunk_size=1000000):
   while(steps > current_step):
     current_step += 1
     chunk = client.get('{}_{}'.format(name, current_step))
-    if chunk:
-      data += chunk
-    else:
+    if chunk == None:
       raise KeyError("This data has unfortunately been corrupted") 
+    data += chunk
   return data
