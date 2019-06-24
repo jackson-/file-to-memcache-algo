@@ -3,7 +3,6 @@ from os.path import getsize
 
 client = Client(('localhost', 11211))
 
-result = client.get('some_key')
 
 def store(name, infile):
   chunk_size=1000000
@@ -20,7 +19,8 @@ def store(name, infile):
       client.set('{}_0'.format(name), size / 1000000)
     client.set('{}_{}'.format(name, step), data)
     data = data_file.read(chunk_size)
-    step += 1  
+    step += 1
+  return True
   
   
 def retrieve(name, chunk_size=1000000):
