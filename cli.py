@@ -1,20 +1,15 @@
 import argparse
 from os.path import getsize
 import math
+from cache_master_flex import store as memstore
 
-def store(name, infile, chunk_size=1000000):
+def store(name, infile):
     # call your library here
     size = getsize(infile)
     if size > 50000000:
       raise ValueError("That file is too large! Please try again with something that is less than 50 megabytes.")
     f = open(infile, "r")
-    data = f.read(chunk_size)
-    step = 1
-    while data:
-      # call your library here
-      data = f.read(chunk_size)
-      step += 1
-    pass
+    memstore(name, f, size)
 
 
 def retrieve(name, outfile):
