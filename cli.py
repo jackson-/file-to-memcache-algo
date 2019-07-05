@@ -1,12 +1,13 @@
 import argparse
 from cache_master_flex import store as memstore, retrieve as memretrieve
+from client import mem_client
 
-def store(name, infile):
-  memstore(name, infile)
+def store(name, infile, client):
+  memstore(name, infile, client)
 
 
-def retrieve(name, outfile):
-  data = memretrieve(name)
+def retrieve(name, client):
+  data = memretrieve(name, client)
   return data
 
 
@@ -15,13 +16,13 @@ def main():
     parser = argparse.ArgumentParser(description='Store and retrieve files in Memcached')
     parser.add_argument('action', help='Action to process (store, retrieve)')
     parser.add_argument('name', help='Name of the file')
-    parser.add_argument('file', help='File for processing')
+    parser.add_argument('file', help='File for processing',nargs='?', default=None)
 
     args = parser.parse_args()
     if args.action == 'store':
-        store(args.name, args.file)
+        store(args.name, args.file, mem_client)
     elif args.action == 'retrieve':
-        retrieve(args.name, args.file)
+        retrieve(args.name, mem_client)
     else:
         parser.print_help()
 
