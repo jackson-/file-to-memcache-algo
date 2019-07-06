@@ -11,22 +11,22 @@ def store(name, infile, client, chunk_size=1000000):
     raise ValueError("That file is too large! Please try again with something that is less than 50 megabytes.")
   data_hash = hashlib.md5()
   data_file = open(infile, "rb")
-  with open(infile, "rb") as f:
-    while True:
-      data_chunk = f.read(BUF_SIZE)
-      if not data_chunk:
-        break
-      data_hash.update(data_chunk)
+  # with open(infile, "rb") as f:
+  #   while True:
+  #     data_chunk = f.read(BUF_SIZE)
+  #     if not data_chunk:
+  #       break
+      
   if(client.get('{}_0'.format(name))):
     raise ValueError("Sorry this file has already been entered. Please enter a different file")
   data = data_file.read(chunk_size)
   step = 1
   while data:
-    if step == 1:
-      client.set('{}_0'.format(name), {"size":size / 1000000.0, "hash": data_hash.hexdigest()})
     client.set('{}_{}'.format(name, step), data)
+    data_hash.update(data)
     data = data_file.read(chunk_size)
     step += 1
+  client.set('{}_0'.format(name), {"size":size / 1000000.0, "hash": data_hash.hexdigest()})
   return True
   
   
