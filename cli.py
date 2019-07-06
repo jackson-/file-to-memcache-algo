@@ -1,6 +1,6 @@
 import argparse
-from cache_master_flex import store as memstore, retrieve as memretrieve
-from client import mem_client
+from library.cache_master_flex import store as memstore, retrieve as memretrieve
+from memcached.client import mem_client
 
 def store(name, infile, client):
   memstore(name, infile, client)

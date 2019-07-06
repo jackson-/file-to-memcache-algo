@@ -3,34 +3,29 @@ import hashlib
 import json
 
 
-BUF_SIZE = 65536
+CHUNK_SIZE = 1000000
+MAX = 50000000
 
-def store(name, infile, client, chunk_size=1000000):
+def store(name, infile, client):
   size = getsize(infile)
-  if size > 50000000:
+  if size > MAX:
     raise ValueError("That file is too large! Please try again with something that is less than 50 megabytes.")
   data_hash = hashlib.md5()
   data_file = open(infile, "rb")
-  # with open(infile, "rb") as f:
-  #   while True:
-  #     data_chunk = f.read(BUF_SIZE)
-  #     if not data_chunk:
-  #       break
-      
   if(client.get('{}_0'.format(name))):
     raise ValueError("Sorry this file has already been entered. Please enter a different file")
-  data = data_file.read(chunk_size)
+  data = data_file.read(CHUNK_SIZE)
   step = 1
   while data:
     client.set('{}_{}'.format(name, step), data)
     data_hash.update(data)
-    data = data_file.read(chunk_size)
+    data = data_file.read(CHUNK_SIZE)
     step += 1
-  client.set('{}_0'.format(name), {"size":size / 1000000.0, "hash": data_hash.hexdigest()})
+  client.set('{}_0'.format(name), {"size":size / float(CHUNK_SIZE), "hash": data_hash.hexdigest()})
   return True
   
   
-def retrieve(name, client, chunk_size=1000000):
+def retrieve(name, client):
   b_string = client.get('{}_0'.format(name))
   if not b_string:
     raise KeyError("This data doesn't exist")
