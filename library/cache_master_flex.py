@@ -10,6 +10,8 @@ def store(name, infile, client):
   size = getsize(infile)
   if size > MAX:
     raise ValueError("That file is too large! Please try again with something that is less than 50 megabytes.")
+  elif size <= 0:
+    raise ValueError("That file is empty.")
   data_hash = hashlib.md5()
   data_file = open(infile, "rb")
   if(client.get('{}_0'.format(name))):
